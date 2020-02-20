@@ -1,5 +1,6 @@
 import os, shutil
 from file_utils import Folder, MediaFile
+from PIL import Image
 
 GET_DIRECTORY = r'D:\Aditya\Pictures Test\From'
 DEST_DIRECTORY = r'D:\Aditya\Pictures Test\To'
@@ -12,18 +13,8 @@ def main():
     audio = Folder(os.path.join(dest_dir.path, 'Audio'))
     duplicates = Folder(os.path.join(dest_dir.path, 'Duplicates'))
     other = Folder(os.path.join(dest_dir.path, 'Other'))
-
-    for f in get_dir.files():
-        if f.type is None:
-            f.move(other)
-        elif f.type == 'Video':
-            f.move(videos)
-        elif f.type == 'Image':
-            f.move(images)
-        elif f.type == 'Audio':
-            f.move(audio)
-        else:
-            print(f'something went wrong with {f}')
+    with Image.open(os.path.join(get_dir.path, 'IMG_8853.jpg')) as img:
+        print(img._getexif()[36867][:7].replace(':', '-'))
 
 if __name__ == '__main__':
     main()
