@@ -70,3 +70,15 @@ class SourceFolder(Folder):
         super().__init__(path)
         
             
+class DestinationFolder(Folder):
+    def __init__(self, path, t):
+        super().__init__(path)
+
+class TypeFolder(Folder):
+    def __init__(self, path):
+        super().__init__(path)
+        
+
+        
+        
+    
