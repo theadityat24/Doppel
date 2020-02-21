@@ -16,19 +16,19 @@ class MediaFile:
     def copy(self, new_dir):
         shutil.copy2(self.path, new_dir.path)
 
-    def getFileData(self):
+    def get_file_data(self):
         with open(self.path, 'rb') as f:
             return f.read()
 
-    def getFileDataSmall(self):
+    def get_file_data_small(self):
         with open(self.path, 'rb') as f:
             return f.read(int(os.path.getsize(self.path)*.01))
 
-    def isDuplicateOf(self, f):
-        return self.getFileData() == f.getFileData()
+    def is_duplicate_of(self, f):
+        return self.get_file_data() == f.getFileData()
 
-    def isDuplicateOfSmall(self, f):
-        return self.getFileDataSmall() == f.getFileDataSmall()
+    def is_duplicate_of_small(self, f):
+        return self.get_file_data_small() == f.get_file_data_small()
         
     def __str__(self):
         return str(self.path)
@@ -63,21 +63,32 @@ class Folder:
             for n in names:
                 f.append(MediaFile(os.path.join(root, n)))
         return f
+
+    def makeFolderIn(self, name):
+        Folder(os.path.join(self.path, name))
             
     
 class SourceFolder(Folder):
     def __init__(self, path):
         super().__init__(path)
-        
-            
-class DestinationFolder(Folder):
-    def __init__(self, path, t):
-        super().__init__(path)
 
-class TypeFolder(Folder):
+    def sort_files_slow(self, dest):
+        pass
+
+
+         
+class DestinationFolder(Folder):
     def __init__(self, path):
         super().__init__(path)
-        
+        self.videos = Folder(os.path.join(self.path, 'Videos'))
+        self.images = Folder(os.path.join(self.path, 'Images'))
+        self.audio = Folder(os.path.join(self.path, 'Audio'))
+        self.other = Folder(os.path.join(self.path, 'Other'))
+        self.duplicates = Folder(os.path.join(self.path, 'Duplicates'))
+
+
+
+
 
         
         
