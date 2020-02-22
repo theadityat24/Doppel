@@ -65,26 +65,55 @@ class Folder:
         return f
 
     def makeFolderIn(self, name):
-        Folder(os.path.join(self.path, name))
+        return Folder(os.path.join(self.path, name))
             
     
 class SourceFolder(Folder):
     def __init__(self, path):
         super().__init__(path)
 
-    def sort_files_slow(self, dest):
-        pass
+    def sort_files(self, dest):
+        files = self.files()
+        for f in files:
+            i = files.index(f)
+            if i < len(files) - 1:
+                for f2 in files[i+1:]:
+                    if f.is_duplicate_of_small(f2):
+                        f2.move(dest.duplicates)
+                        files.remove(f2)
+            if f.type == 'Image':
+                d = dest.images.addDateFolder(f.date)
+                f.move(d)
+            elif f.type == 'Video':
+                d = dest.videos.addDateFolder(f.date)
+                f.move(d)
+            elif f.type == 'Audio':
+                d = dest.audio.addDateFolder(f.date)
+                f.move(d)
+            else:
+                d = dest.other.addDateFolder(f.date)
+                f.move(d)
+            
 
+class TypeFolder(Folder):
+    def __init__(self, dest, t):
+        super().__init__(dest.path)
+        self.type = t
 
+    def addDateFolder(self, date):
+        Folder(os.path.join(self.path, date))
+        
          
 class DestinationFolder(Folder):
     def __init__(self, path):
         super().__init__(path)
-        self.videos = Folder(os.path.join(self.path, 'Videos'))
-        self.images = Folder(os.path.join(self.path, 'Images'))
-        self.audio = Folder(os.path.join(self.path, 'Audio'))
-        self.other = Folder(os.path.join(self.path, 'Other'))
-        self.duplicates = Folder(os.path.join(self.path, 'Duplicates'))
+        self.videos = TypeFolder(self, 'Videos')
+        self.images = TypeFolder(self, 'Images')
+        self.audio = TypeFolder(self, 'Audio')
+        self.other = TypeFolder(self, 'Other')
+        self.duplicates = TypeFolder(self, 'Duplicates')
+
+    
 
 
 
